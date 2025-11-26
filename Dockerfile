@@ -1,5 +1,5 @@
 # Imagen base ligera y soportada
-FROM node:20-alpine
+FROM node:22-alpine
 
 # Crear usuario no root para ejecutar la app
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
