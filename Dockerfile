@@ -1,19 +1,26 @@
-FROM node:22-alpine
+# Imagen base ligera y soportada
+FROM node:20-alpine
 
+# Crear usuario no root para ejecutar la app
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Directorio de trabajo
 WORKDIR /usr/src/app
 
+# Copiar solo definición de dependencias
 COPY package*.json ./
 
-# Use npm install instead of npm ci, with force flag for compatibility
-RUN npm install --legacy-peer-deps
+# Instalar dependencias de producción de forma reproducible
+RUN npm ci --only=production
 
+# Copiar el resto del código
 COPY . .
 
-USER 1001
+# Cambiar al usuario no root
+USER appuser
 
+# Exponer el puerto de la aplicación
 EXPOSE 3000
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:3000', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
-
+# Comando de inicio
 CMD ["npm", "start"]
