@@ -16,9 +16,6 @@ WORKDIR /usr/src/app
 # Copiar solo definición de dependencias
 COPY package*.json ./
 
-# Instalar dependencias y auditar vulnerabilidades
-RUN npm audit fix
-
 # Copiar el resto del código y asignar permisos al usuario no root
 COPY --chown=appuser:appgroup . .
 
