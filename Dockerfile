@@ -1,5 +1,8 @@
 # Imagen base ligera y soportada
-FROM node:22-alpine3.20
+FROM node:22-alpine
+
+# Actualizar OpenSSL a la última versión segura
+RUN apk update && apk upgrade openssl
 
 # Crear usuario no root para ejecutar la app
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
@@ -10,8 +13,8 @@ WORKDIR /usr/src/app
 # Copiar solo definición de dependencias
 COPY package*.json ./
 
-# Copiar el resto del código
-COPY . .
+# Copiar el resto del código y asignar permisos al usuario no root
+COPY --chown=appuser:appgroup . .
 
 # Cambiar al usuario no root
 USER appuser
