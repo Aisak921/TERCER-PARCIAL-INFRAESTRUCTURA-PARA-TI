@@ -48,7 +48,13 @@ jobs:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
         image: your/image-to-test
-        args: --file=Dockerfile
+        args: --file=Dockerfile --sarif-file-output=snyk.sarif
+
+    - name: Fix SARIF format for GitHub
+      run: |
+        sed -i 's/"security-severity": "undefined"/"security-severity": "0"/g' snyk.sarif
+        sed -i 's/"security-severity": "null"/"security-severity": "0"/g' snyk.sarif
+
     - name: Upload result to GitHub Code Scanning
       uses: github/codeql-action/upload-sarif@v2
       with:
