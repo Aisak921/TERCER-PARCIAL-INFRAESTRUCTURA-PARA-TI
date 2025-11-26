@@ -10,11 +10,8 @@ WORKDIR /usr/src/app
 # Copiar solo definición de dependencias
 COPY package*.json ./
 
-# Instalar dependencias
-RUN npm install --legacy-peer-deps
-
-# Copiar el resto del código y asignar permisos al usuario no root
-COPY --chown=appuser:appgroup . .
+# Copiar el resto del código
+COPY . .
 
 # Cambiar al usuario no root
 USER appuser
